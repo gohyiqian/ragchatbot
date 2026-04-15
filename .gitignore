@@ -10,6 +10,7 @@ __pycache__/
 .Python
 
 # Virtual environments
+.venv/
 venv/
 env/
 ENV/
@@ -29,3 +30,5 @@ uploads/
 # OS
 .DS_Store
 Thumbs.db
+
+.playwright-mcp
