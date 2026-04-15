@@ -4,6 +4,39 @@ const API_URL = '/api';
 // Global state
 let currentSessionId = null;
 
+// ─── Theme ────────────────────────────────────────────────────
+
+function initTheme() {
+    const saved = localStorage.getItem('theme');
+    // Default to dark; only switch to light if explicitly saved
+    if (saved === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+        updateToggleAriaLabel('light');
+    }
+}
+
+function toggleTheme() {
+    const isLight = document.body.getAttribute('data-theme') === 'light';
+    const next = isLight ? 'dark' : 'light';
+    if (next === 'light') {
+        document.body.setAttribute('data-theme', 'light');
+    } else {
+        document.body.removeAttribute('data-theme');
+    }
+    localStorage.setItem('theme', next);
+    updateToggleAriaLabel(next);
+}
+
+function updateToggleAriaLabel(theme) {
+    const btn = document.getElementById('themeToggle');
+    if (btn) {
+        btn.setAttribute(
+            'aria-label',
+            theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'
+        );
+    }
+}
+
 // DOM elements
 let chatMessages, chatInput, sendButton, totalCourses, courseTitles;
 
@@ -16,6 +49,7 @@ document.addEventListener('DOMContentLoaded', () => {
     totalCourses = document.getElementById('totalCourses');
     courseTitles = document.getElementById('courseTitles');
     
+    initTheme();
     setupEventListeners();
     createNewSession();
     loadCourseStats();
@@ -23,6 +57,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Event Listeners
 function setupEventListeners() {
+    // Theme toggle
+    const themeToggle = document.getElementById('themeToggle');
+    if (themeToggle) {
+        themeToggle.addEventListener('click', toggleTheme);
+    }
+
     // Chat functionality
     sendButton.addEventListener('click', sendMessage);
     chatInput.addEventListener('keypress', (e) => {
